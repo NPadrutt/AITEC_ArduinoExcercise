@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoTests", "ArduinoTests\ArduinoTests.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FadingLED", "FadingLED\FadingLED.vcxproj", "{AD74036E-A08C-4F80-9ACB-B6DCC73F2A22}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDCardInitTest", "SDCardInitTest\SDCardInitTest.vcxproj", "{8B43C058-87E9-4116-B239-D274CDC6FB4B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDCardReadWriteTest", "SDCardReadWriteTest\SDCardReadWriteTest.vcxproj", "{F2C81609-B3C9-46BE-A3DD-264E03E84971}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{944ADDF5-4463-4459-9AC6-B699D5D827D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
+		{AD74036E-A08C-4F80-9ACB-B6DCC73F2A22}.Debug|x86.ActiveCfg = Debug|Win32
+		{AD74036E-A08C-4F80-9ACB-B6DCC73F2A22}.Debug|x86.Build.0 = Debug|Win32
+		{AD74036E-A08C-4F80-9ACB-B6DCC73F2A22}.Release|x86.ActiveCfg = Release|Win32
+		{AD74036E-A08C-4F80-9ACB-B6DCC73F2A22}.Release|x86.Build.0 = Release|Win32
+		{8B43C058-87E9-4116-B239-D274CDC6FB4B}.Debug|x86.ActiveCfg = Debug|Win32
+		{8B43C058-87E9-4116-B239-D274CDC6FB4B}.Debug|x86.Build.0 = Debug|Win32
+		{8B43C058-87E9-4116-B239-D274CDC6FB4B}.Release|x86.ActiveCfg = Release|Win32
+		{8B43C058-87E9-4116-B239-D274CDC6FB4B}.Release|x86.Build.0 = Release|Win32
+		{F2C81609-B3C9-46BE-A3DD-264E03E84971}.Debug|x86.ActiveCfg = Debug|Win32
+		{F2C81609-B3C9-46BE-A3DD-264E03E84971}.Debug|x86.Build.0 = Debug|Win32
+		{F2C81609-B3C9-46BE-A3DD-264E03E84971}.Release|x86.ActiveCfg = Release|Win32
+		{F2C81609-B3C9-46BE-A3DD-264E03E84971}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
