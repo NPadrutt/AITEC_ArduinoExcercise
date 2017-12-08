@@ -1,6 +1,6 @@
 /*
-  Name:		    SDCardTest.ino
-  Created:	    12/5/2017 4:44:04 PM
+  Name:         SDCardTest.ino
+  Created:      12/5/2017 4:44:04 PM
   Author:       Adrian Kauz
   Commentary:   Tutorial from https://www.arduino.cc/en/Tutorial/CardInfo
 */

@@ -1,7 +1,7 @@
 /*
- Name:		RESTClientTest.ino
- Created:	12/7/2017 12:58:45 AM
- Author:	Adrian Kauz
+ Name:      RESTClientTest.ino
+ Created:   12/7/2017 12:58:45 AM
+ Author:    Adrian Kauz
 */
 
 #include <Ethernet.h>

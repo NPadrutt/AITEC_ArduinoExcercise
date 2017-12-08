@@ -13,7 +13,10 @@ Folder includes following codes for testing and evaluation:
 - [x] [**SDCardReadWriteTest**](ArduinoTests/SDCardReadWriteTest/SDCardReadWriteTest.ino) _(2017.12.06)_
 - [x] [**PingTest (with modified library)**](ArduinoTests/PingTest/PingTest.ino) _(2017.12.07)_
 - [x] [**WebClientTest**](ArduinoTests/WebClientTest/WebClientTest.ino) _(2017.12.07)_
+- [x] [**PushTest**](ArduinoTests/PushTest/PushTest.ino) _(2017.12.08)_
+- [x] [**WebServerTest**](ArduinoTests/WebServerTest/WebServerTest.ino) _(2017.12.08)_
 - [ ] [**RestClientTest**](ArduinoTests/RestClientTest/RestClientTest.ino)
+- [ ] [**PushImageToServerTest**](ArduinoTests/PushImageToServerTest/PushImageToServerTest.ino) _(current Task)_
 
 _(Checkbox is marked if test was successful)_<br><br>
 
