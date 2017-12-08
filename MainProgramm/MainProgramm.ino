@@ -23,6 +23,8 @@ const int buttonPin = 2;                 // the number of the pushbutton pin
 unsigned long picTotalLen = 0;            // picture length
 int picNameNum = 0;
 
+char startText[] = "Hi"; 
+
 /*********************************************************************/
 void setup()
 {
@@ -38,13 +40,13 @@ void setup()
         return;
     }
     //Serial.println("sd init done.");
-    printText("Init.. Done");
+    //printText("Init.. Done");
     initialize();
 }
 /*********************************************************************/
 void loop()
 {
-    printText("Hallo :)");
+    printText(startText);
   
     int n = 0;
     while(1){
@@ -54,21 +56,21 @@ void loop()
             delay(20);                               //Debounce
             if (digitalRead(buttonPin) == HIGH)
             {
-                printText("Bitte lächeln..");
+                //printText("Bitte lächeln..");
                 //Serial.println("\r\nbegin to take picture");
                 delay(200);
                 if (n == 0) preCapture();
                 Capture();
                 GetData();
             }
-            printText("Bild wurde gemacht und wird gesendet.");
+            //printText("Bild wurde gemacht und wird gesendet.");
             //Serial.print("\r\nTaking pictures success ,number : ");
             //Serial.println(n);
             n++ ;
 
             // Bild senden
 
-            printText("Hallo :)");
+            printText(startText);
         }
     }
 }
