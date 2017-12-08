@@ -15,8 +15,9 @@ Folder includes following codes for testing and evaluation:
 - [x] [**WebClientTest**](ArduinoTests/WebClientTest/WebClientTest.ino) _(2017.12.07)_
 - [x] [**PushTest**](ArduinoTests/PushTest/PushTest.ino) _(2017.12.08)_
 - [x] [**WebServerTest**](ArduinoTests/WebServerTest/WebServerTest.ino) _(2017.12.08)_
+- [x] [**PushImageToServerTest**](ArduinoTests/PushImageToServerTest/PushImageToServerTest.ino) _(2017.12.08)_
+- [x] [**SDCardImageToSerial**](ArduinoTests/SDCardImageToSerial/SDCardImageToSerial.ino) _(2017.12.08)_
 - [ ] [**RestClientTest**](ArduinoTests/RestClientTest/RestClientTest.ino)
-- [ ] [**PushImageToServerTest**](ArduinoTests/PushImageToServerTest/PushImageToServerTest.ino) _(current Task)_
 
 _(Checkbox is marked if test was successful)_<br><br>
 

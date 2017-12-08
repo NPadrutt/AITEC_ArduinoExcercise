@@ -15,8 +15,6 @@ byte serverIPAddress[]      = { 192, 168, 1, 200 };                   // IP-Addr
 int  serverPort             = 1337;                                   // Port of the webserver
 unsigned long fileSize      = 0;
 
-
-
 EthernetClient client;
 
 void sendHttpRequest();
@@ -119,8 +117,8 @@ void sendHttpRequest()
                 
                 // Here begins the magic about converting the image to base64
                 int clientCount = 0;
-                char clientBuf[60];
-                char clientBaseBuf[81];
+                char clientBuf[48]; // Must be a multiple of 3
+                char clientBase64Buf[72];
 
                 while (myFile.available()) // Is another byte to read available?
                 {
@@ -128,30 +126,24 @@ void sendHttpRequest()
                     clientCount++;
 
                     //
-                    if (clientCount > 60)
+                    if (clientCount > 47)
                     {
-                        base64_encode(clientBaseBuf, clientBuf, clientCount);
-                        Serial.print(clientBaseBuf);
-                        client.print(clientBaseBuf);
+                        base64_encode(clientBase64Buf, clientBuf, clientCount);
+                        Serial.print(clientBase64Buf);
+                        client.print(clientBase64Buf);
                         clientCount = 0;
                     }
                 }
                 
-                //final <64 byte cleanup packet
+                //final <48 byte cleanup packet
                 if (clientCount > 0) {
-                    base64_encode(clientBaseBuf, clientBuf, clientCount);
-                    Serial.print(clientBaseBuf);
-                    //Serial.println();
-                    //Serial.print("Count: ");
-                    //Serial.print(clientCount);
-                    //client.write(clientBuf, clientCount);
+                    base64_encode(clientBase64Buf, clientBuf, clientCount);
+                    Serial.print(clientBase64Buf);
+                    client.print(clientBase64Buf);
                 }
                 // close the file:
                 myFile.close();
                 
-
-
-
                 client.println("\"}");
                 // End printing content
 
