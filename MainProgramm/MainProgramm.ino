@@ -30,14 +30,14 @@ void setup()
     printText("Init..");
     Serial.begin(115200);
     pinMode(buttonPin, INPUT);    // initialize the pushbutton pin as an input
-    Serial.println("Initializing SD card....");
+    //Serial.println("Initializing SD card....");
     
     if (!SD.begin(4)) 
     {
-        Serial.print("sd init failed");
+        //Serial.print("sd init failed");
         return;
     }
-    Serial.println("sd init done.");
+    //Serial.println("sd init done.");
     printText("Init.. Done");
     initialize();
 }
@@ -48,22 +48,22 @@ void loop()
   
     int n = 0;
     while(1){
-        Serial.println("\r\nPress the button to take a picture");
+        //Serial.println("\r\nPress the button to take a picture");
         while (digitalRead(buttonPin) == LOW);      //wait for buttonPin status to HIGH
         if(digitalRead(buttonPin) == HIGH){
             delay(20);                               //Debounce
             if (digitalRead(buttonPin) == HIGH)
             {
                 printText("Bitte lächeln..");
-                Serial.println("\r\nbegin to take picture");
+                //Serial.println("\r\nbegin to take picture");
                 delay(200);
                 if (n == 0) preCapture();
                 Capture();
                 GetData();
             }
             printText("Bild wurde gemacht und wird gesendet.");
-            Serial.print("\r\nTaking pictures success ,number : ");
-            Serial.println(n);
+            //Serial.print("\r\nTaking pictures success ,number : ");
+            //Serial.println(n);
             n++ ;
 
             // Bild senden
@@ -120,7 +120,7 @@ void initialize()
     cmd[1] = 0x0e | cameraAddr;
     cmd[2] = 0x0d;
     sendCmd(cmd, 6);
-    Serial.println("\nCamera initialization done.");
+    //Serial.println("\nCamera initialization done.");
 }
 /*********************************************************************/
 void preCapture()
@@ -179,8 +179,8 @@ void Capture()
             if (resp[0] == 0xaa && resp[1] == (0x0a | cameraAddr) && resp[2] == 0x01)
             {
                 picTotalLen = (resp[3]) | (resp[4] << 8) | (resp[5] << 16);
-                Serial.print("picTotalLen:");
-                Serial.println(picTotalLen);
+                //Serial.print("picTotalLen:");
+                //Serial.println(picTotalLen);
                 break;
             }
         }
@@ -207,7 +207,7 @@ void GetData()
 
     myFile = SD.open(picName, FILE_WRITE);
     if(!myFile){
-        Serial.println("myFile open fail...");
+        //Serial.println("myFile open fail...");
     }
     else{
         Serial.setTimeout(1000);
