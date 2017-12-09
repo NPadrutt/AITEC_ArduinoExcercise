@@ -9,15 +9,17 @@
 #include <SD.h>
 #include <Base64.h>
 
+#define FILE_BUFFER_SIZE 48
+#define FILE_BASE64_BUFFER_SIZE 72
+
 byte arduinoMACAddr[]       = { 0x90, 0xA2, 0xDA, 0x10, 0xE6, 0xAB }; // Arduino's MAC address
 byte arduinoIPAddr[]        = { 192, 168, 1, 80 };                    // Arduino's IP Address
 byte serverIPAddress[]      = { 192, 168, 1, 200 };                   // IP-Address of the webserver
 int  serverPort             = 1337;                                   // Port of the webserver
-unsigned long fileSize      = 0;
 
 EthernetClient client;
 
-void sendHttpRequest();
+void postHttpRequest();
 
 /*
 ================
@@ -26,28 +28,18 @@ setup()
 */
 void setup()
 {
-    //Initialize serial and wait for port to open:
+    // Initialize serial and wait for port to open:
     Serial.begin(38400);
     while (!Serial) {
         ; // wait for serial port to connect. Needed for native USB
     }
 
-    Serial.println("Begin setup...");
-
-    Serial.print("- Init SD... ");
+    // Init SD-Card
     if (!SD.begin(4)) {
-        Serial.println("failed!");
-        while (1);
-    }
-    else {
-        Serial.println("success!");
+        while (1); // If init failed, stop here
     }
 
-    Serial.print("- Init Ethernet... ");
     Ethernet.begin(arduinoMACAddr, arduinoIPAddr);
-    Serial.println("done!");
-
-    Serial.println("End setup...");
 }
 
 
@@ -58,78 +50,71 @@ loop()
 */
 void loop()
 {   
-    sendHttpRequest();
+    postHttpRequest();
     while (1);
 }
 
 
 /*
 ================
-sendHttpRequest()
+postHttpRequest()
 ================
 */
-void sendHttpRequest()
+void postHttpRequest()
 {
-    Serial.println("Begin sendHttpRequest()...");
-
     File myFile;
 
-    Serial.println("- Open file... ");
     if (SD.exists("BRIAN.JPG")) {
         myFile = SD.open("BRIAN.JPG");
 
         if (myFile) {
-            Serial.println("success!");
-
             unsigned long contentLength = 0;
+            unsigned long fileSize = 0;
 
             fileSize = myFile.size();
             contentLength = (fileSize + 2 - ((fileSize + 2) % 3)) / 3 * 4; // size of the file as Base64
 
             if (client.connect(serverIPAddress, serverPort)) {
-                Serial.println("- Connected!");
-                char buffer[100];
+                char buffer[50];
                 
-                // Current content
+                // Variable content
                 sprintf(buffer, "{\"sID\":%d,\"sEvent\":\"%s\"\0", 245, "Klingeln");
 
                 // Make a HTTP request:
-                client.println("POST / HTTP/1.1");
-                client.println("User-Agent: Arduino");
-                client.println("Host: 192.168.1.200");
-                client.println("Content-Type: application/json");
-                client.println("Connection: close");
+                client.println(F("POST / HTTP/1.1"));
+                client.println(F("User-Agent: Arduino"));
+                client.println(F("Host: 192.168.1.200"));
+                client.println(F("Content-Type: application/json"));
+                client.println(F("Connection: close"));
 
                 // Calculate correct length of content
-                client.print("Content-Length: ");
-                contentLength += strlen(buffer);
-                contentLength += 11; // For the other stuff after buffer
+                client.print(F("Content-Length: "));
+                contentLength += strlen(buffer) + 11;
                 
                 char bufferLength[6];
                 itoa(contentLength, bufferLength, 10);
                 client.println(bufferLength);
-
+                
                 client.println();
                 
                 // Start printing content
                 client.print(buffer);
-                client.print(",\"data\":\"");
+                client.print(F(",\"data\":\""));
                 
-                // Here begins the magic about converting the image to base64
+                // Here begins the magic about converting the image to base64 and sending it via Ethernet
                 int clientCount = 0;
-                char clientBuf[48]; // Must be a multiple of 3
-                char clientBase64Buf[72];
+                char clientBuf[FILE_BUFFER_SIZE]; // Must be a multiple of 3
+                char clientBase64Buf[FILE_BASE64_BUFFER_SIZE];
 
                 while (myFile.available()) // Is another byte to read available?
                 {
                     clientBuf[clientCount] = myFile.read(); // Read one byte
                     clientCount++;
 
-                    //
-                    if (clientCount > 47)
+                    if (clientCount > FILE_BUFFER_SIZE - 1)
                     {
                         base64_encode(clientBase64Buf, clientBuf, clientCount);
-                        Serial.print(clientBase64Buf);
+                        //Serial.print(clientBase64Buf); // For serial output to check if encoding was successful
                         client.print(clientBase64Buf);
                         clientCount = 0;
                     }
@@ -138,7 +123,7 @@ void sendHttpRequest()
                 //final <48 byte cleanup packet
                 if (clientCount > 0) {
                     base64_encode(clientBase64Buf, clientBuf, clientCount);
-                    Serial.print(clientBase64Buf);
+                    //Serial.print(clientBase64Buf); // For serial output to check if encoding was successful
                     client.print(clientBase64Buf);
                 }
                 // close the file:
@@ -148,19 +133,7 @@ void sendHttpRequest()
                 // End printing content
 
                 client.stop();
-                Serial.println("- Disconnected!");
-            }
-            else {
-                Serial.println("- Connection failed!");
             }
         }
-        else {
-            Serial.println("failed!");
-        }
     }
-    else {
-        Serial.println("file not found!");
-    }
-
-    Serial.println("End sendHttpRequest()...");
 }
