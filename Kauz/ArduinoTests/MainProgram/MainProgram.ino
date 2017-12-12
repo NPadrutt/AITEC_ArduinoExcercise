@@ -7,9 +7,11 @@
 
 #include <SPI.h>
 #include <SD.h>
+#include <Wire.h>
 #include "includes\ButtonPress.h"
 #include "includes\Camera.h"
 #include "includes\HttpHandler.h"
+#include "includes\SeeedOLED.h"
 
 const int buttonPin = 2;
 
@@ -22,10 +24,15 @@ setup()
 ================
 */
 void setup()
-{
-    Serial.println(F("Start setup..."));
+{   
     // Initialize Serial
     Serial.begin(115200);
+    
+    while (!Serial) {
+        ; // wait for serial port to connect. Needed for native USB
+    }
+
+    Serial.println(F("Start setup..."));
 
     // Initialize SD-Card
     if (!SD.begin(4)) {
@@ -47,6 +54,15 @@ void setup()
     httpHandler.setServerIpAddress(192, 168, 1, 200);
     httpHandler.setServerPort(1337);
     httpHandler.init();
+
+    // Initialize display
+    Wire.begin();
+    SeeedOled.init();                       // Initialize SEEED OLED Display
+    SeeedOled.clearDisplay();               // Clear the screen and set start position to top left corner
+    SeeedOled.setNormalDisplay();           // Set display to normal mode (i.e non-inverse mode)
+    SeeedOled.setPageMode();                // Set addressing mode to Page Mode
+    SeeedOled.setTextXY(0, 0);              // Set the cursor to Xth Page, Yth Column  
+    SeeedOled.putString("Hello World!");    // Print the String
 
     Serial.println(F("End setup..."));
 }
