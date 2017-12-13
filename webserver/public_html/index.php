@@ -15,6 +15,7 @@ $result = $con->query($sql);
    </head>
 <body>
    <h1>Who rang the bell?</h1>
+  
    
    
    <?php
@@ -83,7 +84,7 @@ else // else take the visitor list
     <?php 
 		  foreach ($visitor_list as $visitor):
 		        printf("<tr><td> &nbsp;%s </td><td> &nbsp;%s&nbsp; </td><td> &nbsp;%s&nbsp; </td><td> &nbsp;%s&nbsp; </td></tr>", 
-		          $visitor["id"], '<a href="'.$url.'/?action=get_visitor&id='.$visitor["id"].'">'.$visitor["timeStamp"].'/>','<img width="100px" src="data:image/jpeg;base64,' . $visitor["base64Image"] . '" />', $visitor["reply"]);
+		          $visitor["id"], '<a href="'.$url.'/?action=get_visitor&id='.$visitor["id"].'">'.$visitor["timeStamp"].'</a>','<img width="100px" src="data:image/jpeg;base64,' . $visitor["base64Image"] . '" />', $visitor["reply"]);
 		endforeach; ?>
    </table>
 
