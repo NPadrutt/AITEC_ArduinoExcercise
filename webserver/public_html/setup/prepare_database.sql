@@ -30,6 +30,7 @@ USE `doorkeeper`;
 --
 CREATE TABLE `ringings` (
   `id`        int(10)        unsigned NOT NULL auto_increment,
+  `uid`        varchar(60)        ,
   `timeStamp`        timestamp      NOT NULL default CURRENT_TIMESTAMP,
   `base64Image`  mediumtext    NOT NULL,
   `reply`      varchar(2048)  NOT NULL,
