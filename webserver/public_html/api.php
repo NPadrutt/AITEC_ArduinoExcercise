@@ -15,7 +15,7 @@ function get_visitor_by_id($id)
   $result = $con->query($sql);
   if($result->num_rows > 0){
 		     while($row = $result->fetch_assoc()) {
-		     $visitor_info = array("id" => $row["id"], "timeStamp" => $row["timeStamp"], "reply" => $row["reply"],"base64Image" => $row["base64Image"]);
+		     $visitor_info = array("id" => $row["id"], "uid" =>$row["uid"], "timeStamp" => $row["timeStamp"], "reply" => $row["reply"],"base64Image" => $row["base64Image"]);
 		     }
  }
 
@@ -32,7 +32,7 @@ function get_visitor_list()
   $result = $con->query($sql);
   if($result->num_rows > 0){
 		     while($row = $result->fetch_assoc()) {
-		     $arrayOfResults[] = array("id" => $row["id"], "timeStamp" => $row["timeStamp"], "reply" => $row["reply"],"base64Image" => $row["base64Image"]);
+		     $arrayOfResults[] = array("id" => $row["id"],"uid" =>$row["uid"], "timeStamp" => $row["timeStamp"], "reply" => $row["reply"],"base64Image" => $row["base64Image"]);
 		     }
  }
   

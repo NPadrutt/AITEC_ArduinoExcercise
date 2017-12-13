@@ -15,17 +15,9 @@
 		 */
 		public function processApi()
 		{
-			$func = strtolower(trim(str_replace("/","",$_REQUEST['action'])));
-			if ((int)method_exists($this,$func) > 0)
-			{
-				$this->$func();
-			}
-			else
-			{
-				$this->response('',404); // If the method not exist with in this class, response would be "Page not found".
-			}
+			$this->createEntry();
 		}
-		/* 
+		/* s
 		 *	Insert new User into Database system
 		 *  method : GET
 		 *  data   : json data
@@ -36,40 +28,6 @@
     	echo str_replace("this","that","HELLO WORLD!!");
  		}
  		
- 		private function createContainer(){ //when firstSending Request without Image
-			$con = Connection();
-	
-			if(!$con)
-			{
-				$arr_res = array();
-				$arr_res['error']  = array("msg" => "no DB Connection");
-				$arr_res['result'] = array('status' => "Failed");
-				$this->response($this->json($arr_res), 503);
-		 	}
-
- 			$data = $this->convert_json_to_array($this->_request['data']);
-			$timeStamp= date("Y-m-d H:i:s");
- 			$query = "INSERT INTO ringings (timeStamp) VALUES ('$timeStamp')"; 
-   
-			if(!mysqli_query($con,$query))
-			{
-					$arr_res = array();
-					$arr_res['error']  = array("msg" => "failed Adding Entry");
-					$arr_res['result'] = array('status' => "Failed");
-					$this->response($this->json($arr_res), 417);
-			}
-			else
-			{
-				$last_id = $con->insert_id;
-				$str_array = array('status' => "Success" ,'id' => $last_id, 'reply' => Null, 'base64Image' => Null);
-				
-				$arr_res = array();
-				$arr_res['error']  = $error;
-				$arr_res['result'] = $str_array;
-				$this->response($this->json($arr_res), 200);	
-		 		}
-		 	$con->close();
-		}
 		
 		private function createEntry(){ //when Request already with Image
 			$con = Connection();
@@ -81,12 +39,22 @@
 				$arr_res['result'] = array('status' => "Failed");
 				$this->response($this->json($arr_res), 503);
 		 	}
+		 	$entityBody = file_get_contents('php://input');
+		 	$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+			$txt = $entityBody;
+			fwrite($myfile, $txt);
+			fclose($myfile);
 
- 			$data = $this->convert_json_to_array($this->_request['data']);
+ 			$data = $this->convert_json_to_array($entityBody);
+ 			
+ 			$myfile2 = fopen("newfile2.txt", "w") or die("Unable to open file!");
+			$txt2 = $data;
+			fwrite($myfile2, $txt2);
+			fclose($myfile2);
 			$timeStamp= date("Y-m-d H:i:s");
-			$base64Image= 'base64Image';
-			//$base64Image= $data['base64Image'];
- 			$query = "INSERT INTO ringings (timeStamp, base64Image) VALUES ('$timeStamp','$base64Image')"; 
+			$uid = $data['clientID'];
+			$base64Image= $data['base64Image'];
+ 			$query = "INSERT INTO ringings (timeStamp, base64Image, uid) VALUES ('$timeStamp','$base64Image', '$uid')"; 
    
 			if(!mysqli_query($con,$query))
 			{
@@ -98,7 +66,7 @@
 			else
 			{
 				$last_id = $con->insert_id;
-				$str_array = array('status' => "Success" ,'id' => $last_id, 'reply' => Null, 'base64Image' => $base64Image);
+				$str_array = array('status' => "Success" ,'id' => $last_id, 'reply' => Null, 'base64Image' => $base64Image, 'uid' => $uid);
 				
 				$arr_res = array();
 				$arr_res['error']  = $error;
@@ -112,42 +80,7 @@
 		}
 		
 		
-		private function updateImage(){ //For Adding image to Container with ID
-			$con = Connection();
-	
-			if(!$con)
-			{
-				$arr_res = array();
-				$arr_res['error']  = array("msg" => "no DB Connection");
-				$arr_res['result'] = array('status' => "Failed");
-				$this->response($this->json($arr_res), 503);
-		 	}
-
- 			$data = $this->convert_json_to_array($this->_request['data']);
-			$id= $data['id'];
-			$base64Image= $data['base64Image'];
- 			$query = "UPDATE ringings SET base64Image = '$base64Image' WHERE id = '$id'"; 
-   
-			if(!mysqli_query($con,$query))
-			{
-					$arr_res = array();
-					$arr_res['error']  = array("msg" => "failed Adding Image");
-					$arr_res['result'] = array('status' => "Failed");
-					$this->response($this->json($arr_res), 417);
-			}
-			else
-			{
-				$last_id = $con->insert_id;
-				$str_array = array('status' => "Success" ,'id' => $id, 'reply' => Null, 'base64Image' => $base64Image);
-				
-				$arr_res = array();
-				$arr_res['error']  = $error;
-				$arr_res['result'] = $str_array;
-				$this->response($this->json($arr_res), 200);	
-				
-		 		}
-		 	$con->close();
-		}
+		
 		
 		private function updateReply(){ //For Adding Reply-Message to Container with ID
 			$con = Connection();

@@ -2,7 +2,7 @@
  
  include("connect.php");
 
-$url = 'http://192.168.178.101';
+$url = 'http://192.168.1.200/';
 $con = Connection();
 $sql = "SELECT * FROM ringings ORDER BY id DESC";
 $result = $con->query($sql);
@@ -25,15 +25,18 @@ if (isset($_GET["action"]) && isset($_GET["id"]) && $_GET["action"] == "get_visi
   $visitor_info = json_decode($visitor_info, true);
   ?>
   <div>
-    <table>
+    <table height="1000">
       <tr>
         <td>id: </td><td> <?php echo $visitor_info["id"] ?></td>
+      </tr>
+      <tr>
+        <td>device: </td><td> <?php echo $visitor_info["uid"] ?></td>
       </tr>
       <tr>
         <td>Timestamp: </td><td> <?php echo $visitor_info["timeStamp"] ?></td>
       </tr>
       <tr>
-        <td>Image: </td><td> <?php echo '<img width="100px" src="data:image/jpeg;base64,' . $visitor_info["base64Image"] . '" />' ?></td>
+        <td>Image: </td><td> <?php echo '<img heigt="300px" src="' . $visitor_info["base64Image"] . '" />' ?></td>
       </tr>
       
       <tr>
@@ -75,6 +78,7 @@ else // else take the visitor list
   <table border="1" cellspacing="1" cellpadding="1">
 		<tr>
 			<td>&nbsp;ID&nbsp;</td>
+			<td>&nbsp;Device&nbsp;</td>
 			<td>&nbsp;TimeStamp&nbsp;</td>
 			<td>&nbsp;Image&nbsp;</td>
 			<td>&nbsp;Reply&nbsp;</td>
@@ -83,8 +87,8 @@ else // else take the visitor list
     <ul>
     <?php 
 		  foreach ($visitor_list as $visitor):
-		        printf("<tr><td> &nbsp;%s </td><td> &nbsp;%s&nbsp; </td><td> &nbsp;%s&nbsp; </td><td> &nbsp;%s&nbsp; </td></tr>", 
-		          $visitor["id"], '<a href="'.$url.'/?action=get_visitor&id='.$visitor["id"].'">'.$visitor["timeStamp"].'</a>','<img width="100px" src="data:image/jpeg;base64,' . $visitor["base64Image"] . '" />', $visitor["reply"]);
+		        printf("<tr><td> &nbsp;%s </td><td> &nbsp;%s </td><td> &nbsp;%s&nbsp; </td><td> &nbsp;%s&nbsp; </td><td> &nbsp;%s&nbsp; </td></tr>", 
+		          $visitor["id"], $visitor["uid"], '<a href="'.$url.'/?action=get_visitor&id='.$visitor["id"].'">'.$visitor["timeStamp"].'</a>','<img width="100px" src="' . $visitor["base64Image"] . '" />', $visitor["reply"]);
 		endforeach; ?>
    </table>
 
