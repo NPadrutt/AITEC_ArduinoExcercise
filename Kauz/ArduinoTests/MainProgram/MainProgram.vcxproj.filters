@@ -21,30 +21,39 @@
     <ClInclude Include="__vm\.MainProgram.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\ButtonPress.h">
+    <ClInclude Include="Include\Base64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\Camera.h">
+    <ClInclude Include="Include\HttpHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\HttpHandler.h">
+    <ClInclude Include="Include\SeeedOLED.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\SeeedOLED.h">
+    <ClInclude Include="Include\CameraHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ButtonHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="includes\ButtonPress.cpp">
+    <ClCompile Include="Include\Base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="includes\Camera.cpp">
+    <ClCompile Include="Include\HttpHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="includes\HttpHandler.cpp">
+    <ClCompile Include="Include\SeeedOLED.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="includes\SeeedOLED.cpp">
+    <ClCompile Include="Include\CameraHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ButtonHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

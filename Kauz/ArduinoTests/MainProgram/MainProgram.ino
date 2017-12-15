@@ -8,14 +8,14 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-#include "includes\ButtonPress.h"
-#include "includes\Camera.h"
-#include "includes\HttpHandler.h"
-#include "includes\SeeedOLED.h"
+#include "Include\ButtonHandler.h"
+#include "Include\CameraHandler.h"
+#include "Include\HttpHandler.h"
+#include "Include\SeeedOLED.h"
+#include "Include\Globals.h"
 
-const int buttonPin = 2;
-
-Camera camera = Camera();
+ButtonHandler button = ButtonHandler();
+CameraHandler camera = CameraHandler();
 HttpHandler httpHandler = HttpHandler();
 
 /*
@@ -32,27 +32,28 @@ void setup()
         ; // wait for serial port to connect. Needed for native USB
     }
 
-    Serial.println(F("Start setup..."));
+    DEBUG_PRINT("Begin setup...");
+
+    // Initialize Button
+    button.setInputPin(2);
 
     // Initialize SD-Card
     if (!SD.begin(4)) {
         while (1); // If init failed, stop here
     }
 
-    // Initialize button
-    prepareButton(buttonPin);    
-
     // Initialize camera
     camera.setAddress(0);
     camera.initialize();
+    delay(1000);
     camera.setResolution(VGA);
 
     // Initialize Http-Handler
     httpHandler.setClientMACAddress(0x90, 0xA2, 0xDA, 0x10, 0xE6, 0xAB);
     httpHandler.setClientIpAddress(192, 168, 1, 80);
     httpHandler.setClientId("18d1ff4f-91d1-4f95-988a-b278480a53ea");
-    httpHandler.setServerIpAddress(192, 168, 1, 200);
-    httpHandler.setServerPort(1337);
+    httpHandler.setServerAddress("192.168.1.200");
+    httpHandler.setServerPort(80);
     httpHandler.init();
 
     // Initialize display
@@ -64,7 +65,7 @@ void setup()
     SeeedOled.setTextXY(0, 0);              // Set the cursor to Xth Page, Yth Column  
     SeeedOled.putString("Hello World!");    // Print the String
 
-    Serial.println(F("End setup..."));
+    DEBUG_PRINT("... setup done!");
 }
 
 
@@ -75,13 +76,13 @@ loop()
 */
 void loop()
 {
-    waitForButtonPress(buttonPin);
+    Serial.println(F("\nReady!"));
+
+    button.waitForButtonPress();
     camera.captureImage();
     camera.saveImageToSDCard();
-    
+    delay(50);
     httpHandler.postImageToServer(camera.getCurrentImageNr());
-    httpHandler.postImageToServer(0);
-    while (1);
 
     /*if (waitForUserReply()) {
         displayMessage();

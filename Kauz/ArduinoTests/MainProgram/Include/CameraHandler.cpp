@@ -8,16 +8,21 @@
 
 #include <SPI.h>
 #include <SD.h>
-#include "Camera.h"
+#include "CameraHandler.h"
+#include "Globals.h"
 
 /*
 ================
 Camera()
 ================
 */
-void Camera::setAddress(int newCameraAddress)
+void CameraHandler::setAddress(int newCameraAddress)
 {
-    cameraAddress = (newCameraAddress << 5);
+    DEBUG_PRINT(" - Enter [CameraHandler::setAddress()]");
+
+    _cameraAddress = (newCameraAddress << 5);
+
+    DEBUG_PRINT(" - Leave [CameraHandler::setAddress()]");
 }
 
 
@@ -26,7 +31,7 @@ void Camera::setAddress(int newCameraAddress)
 clearRxBuf()
 ================
 */
-void Camera::clearRxBuf()
+void CameraHandler::clearRxBuf()
 {
     while (Serial.available())
     {
@@ -40,7 +45,7 @@ void Camera::clearRxBuf()
 sendCmd()
 ================
 */
-void Camera::sendCmd(char cmd[], int cmd_len)
+void CameraHandler::sendCmd(char cmd[], int cmd_len)
 {
     for (char i = 0; i < cmd_len; i++) {
         Serial.print(cmd[i]);
@@ -53,9 +58,11 @@ void Camera::sendCmd(char cmd[], int cmd_len)
 initialize()
 ================
 */
-void Camera::initialize()
+void CameraHandler::initialize()
 {
-    char cmd[] = { 0xaa,0x0d | cameraAddress,0x00,0x00,0x00,0x00 };
+    DEBUG_PRINT(" - Enter [CameraHandler::initialize()]");
+
+    char cmd[] = { 0xaa,0x0d | _cameraAddress,0x00,0x00,0x00,0x00 };
     unsigned char resp[6];
 
     Serial.setTimeout(500);
@@ -66,20 +73,22 @@ void Camera::initialize()
             continue;
         }
 
-        if (resp[0] == 0xaa && resp[1] == (0x0e | cameraAddress) && resp[2] == 0x0d && resp[4] == 0 && resp[5] == 0) {
+        if (resp[0] == 0xaa && resp[1] == (0x0e | _cameraAddress) && resp[2] == 0x0d && resp[4] == 0 && resp[5] == 0) {
             if (Serial.readBytes((char *)resp, 6) != 6) {
                 continue;
             }
 
-            if (resp[0] == 0xaa && resp[1] == (0x0d | cameraAddress) && resp[2] == 0 && resp[3] == 0 && resp[4] == 0 && resp[5] == 0) {
+            if (resp[0] == 0xaa && resp[1] == (0x0d | _cameraAddress) && resp[2] == 0 && resp[3] == 0 && resp[4] == 0 && resp[5] == 0) {
                 break;
             }
         }
     }
 
-    cmd[1] = 0x0e | cameraAddress;
+    cmd[1] = 0x0e | _cameraAddress;
     cmd[2] = 0x0d;
     sendCmd(cmd, 6);
+
+    DEBUG_PRINT("\n - Leave [CameraHandler::initialize()]");
 }
 
 
@@ -88,9 +97,11 @@ void Camera::initialize()
 setResolution()
 ================
 */
-void Camera::setResolution(int resolution)
+void CameraHandler::setResolution(int resolution)
 {
-    char cmd[] = { 0xaa, 0x01 | cameraAddress, 0x00, 0x07, 0x00, resolution };
+    DEBUG_PRINT(" - Enter [CameraHandler::setResolution()]");
+
+    char cmd[] = { 0xaa, 0x01 | _cameraAddress, 0x00, 0x07, 0x00, resolution };
     unsigned char resp[6];
 
     Serial.setTimeout(100);
@@ -103,10 +114,12 @@ void Camera::setResolution(int resolution)
             continue;
         }
 
-        if (resp[0] == 0xaa && resp[1] == (0x0e | cameraAddress) && resp[2] == 0x01 && resp[4] == 0 && resp[5] == 0) {
+        if (resp[0] == 0xaa && resp[1] == (0x0e | _cameraAddress) && resp[2] == 0x01 && resp[4] == 0 && resp[5] == 0) {
             break;
         }
     }
+
+    DEBUG_PRINT("\n - Leave [CameraHandler::setResolution()]");
 }
 
 
@@ -115,9 +128,11 @@ void Camera::setResolution(int resolution)
 captureImage()
 ================
 */
-void Camera::captureImage()
+void CameraHandler::captureImage()
 {
-    char cmd[] = { 0xaa, 0x06 | cameraAddress, 0x08, PIC_PKT_LENGTH & 0xff, (PIC_PKT_LENGTH >> 8) & 0xff ,0 };
+    DEBUG_PRINT(" - Enter [CameraHandler::captureImage()]");
+
+    char cmd[] = { 0xaa, 0x06 | _cameraAddress, 0x08, PIC_PKT_LENGTH & 0xff, (PIC_PKT_LENGTH >> 8) & 0xff ,0 };
     unsigned char resp[6];
 
     Serial.setTimeout(100);
@@ -128,12 +143,12 @@ void Camera::captureImage()
             continue;
         }
         
-        if (resp[0] == 0xaa && resp[1] == (0x0e | cameraAddress) && resp[2] == 0x06 && resp[4] == 0 && resp[5] == 0) {
+        if (resp[0] == 0xaa && resp[1] == (0x0e | _cameraAddress) && resp[2] == 0x06 && resp[4] == 0 && resp[5] == 0) {
             break;
         }
     }
 
-    cmd[1] = 0x05 | cameraAddress;
+    cmd[1] = 0x05 | _cameraAddress;
     cmd[2] = 0;
     cmd[3] = 0;
     cmd[4] = 0;
@@ -147,12 +162,12 @@ void Camera::captureImage()
             continue;
         }
 
-        if (resp[0] == 0xaa && resp[1] == (0x0e | cameraAddress) && resp[2] == 0x05 && resp[4] == 0 && resp[5] == 0) {
+        if (resp[0] == 0xaa && resp[1] == (0x0e | _cameraAddress) && resp[2] == 0x05 && resp[4] == 0 && resp[5] == 0) {
             break;
         }
     }
 
-    cmd[1] = 0x04 | cameraAddress;
+    cmd[1] = 0x04 | _cameraAddress;
     cmd[2] = 0x1;
     
     while (1) {
@@ -163,7 +178,7 @@ void Camera::captureImage()
             continue;
         }
 
-        if (resp[0] == 0xaa && resp[1] == (0x0e | cameraAddress) && resp[2] == 0x04 && resp[4] == 0 && resp[5] == 0) {
+        if (resp[0] == 0xaa && resp[1] == (0x0e | _cameraAddress) && resp[2] == 0x04 && resp[4] == 0 && resp[5] == 0) {
             Serial.setTimeout(1000);
             
             if (Serial.readBytes((char *)resp, 6) != 6)
@@ -171,13 +186,15 @@ void Camera::captureImage()
                 continue;
             }
             
-            if (resp[0] == 0xaa && resp[1] == (0x0a | cameraAddress) && resp[2] == 0x01)
+            if (resp[0] == 0xaa && resp[1] == (0x0a | _cameraAddress) && resp[2] == 0x01)
             {
-                picTotalLength = (resp[3]) | (resp[4] << 8) | (resp[5] << 16);
+                _picTotalLength = (resp[3]) | (resp[4] << 8) | (resp[5] << 16);
                 break;
             }
         }
     }
+
+    DEBUG_PRINT("\n - Leave [CameraHandler::captureImage()]");
 }
 
 
@@ -186,23 +203,25 @@ void Camera::captureImage()
 saveImageToSDCard()
 ================
 */
-void Camera::saveImageToSDCard()
+void CameraHandler::saveImageToSDCard()
 {
+    DEBUG_PRINT(" - Enter [CameraHandler::saveImageToSDCard()]");
+    
     File myFile;
 
-    unsigned int pktCnt = (picTotalLength) / (PIC_PKT_LENGTH - 6);
+    unsigned int pktCnt = (_picTotalLength) / (PIC_PKT_LENGTH - 6);
     
-    if ((picTotalLength % (PIC_PKT_LENGTH - 6)) != 0) {
+    if ((_picTotalLength % (PIC_PKT_LENGTH - 6)) != 0) {
         pktCnt += 1;
     }
 
-    char cmd[] = { 0xaa, 0x0e | cameraAddress, 0x00, 0x00, 0x00, 0x00 };
+    char cmd[] = { 0xaa, 0x0e | _cameraAddress, 0x00, 0x00, 0x00, 0x00 };
     unsigned char pkt[PIC_PKT_LENGTH];
-
-    char picName[] = "img000.jpg";
-    picName[3] = picNumber / 100 + '0';
-    picName[4] = picNumber / 10 + '0';
-    picName[5] = picNumber % 10 + '0';
+    
+    char picName[] = "IMAGE000.JPG";
+    picName[5] = _picNumber / 100 + '0';
+    picName[6] = _picNumber / 10 + '0';
+    picName[7] = _picNumber % 10 + '0';
 
     if (SD.exists(picName))
     {
@@ -252,8 +271,11 @@ void Camera::saveImageToSDCard()
         sendCmd(cmd, 6);
     }
 
+    myFile.flush();
     myFile.close();
-    picNumber++;
+    _picNumber++;
+
+    DEBUG_PRINT("\n - Leave [CameraHandler::saveImageToSDCard()]");
 }
 
 
@@ -262,7 +284,7 @@ void Camera::saveImageToSDCard()
 saveImageToSDCard()
 ================
 */
-int Camera::getCurrentImageNr()
+int CameraHandler::getCurrentImageNr()
 {
-    return picNumber - 1;
+    return _picNumber - 1;
 }

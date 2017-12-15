@@ -10,8 +10,8 @@ class HttpHandler
     private:
         byte arduinoMACAddr[6];             // Arduino's MAC address
         byte arduinoIpAddr[4];              // Arduino's IP address
-        byte serverIpAddr[4];               // IP-Address of the webserver
-        int serverPortNr;                   // Port of the webserver
+        char* serverAddress;
+        int  serverPortNr;                  // Port of the webserver
         char fileName[13] = "IMAGE000.JPG";
         char clientID[UUID_LENGTH];
 
@@ -20,6 +20,7 @@ class HttpHandler
         void setClientIpAddress(byte, byte, byte, byte);
         void setClientId(char[]);
         void setServerIpAddress(byte, byte, byte, byte);
+        void setServerAddress(char*);
         void setServerPort(int);
         void init();
         void postImageToServer(int);
