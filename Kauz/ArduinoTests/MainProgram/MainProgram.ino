@@ -51,7 +51,7 @@ void setup()
     // Initialize Http-Handler
     httpHandler.setClientMACAddress(0x90, 0xA2, 0xDA, 0x10, 0xE6, 0xAB);
     httpHandler.setClientIpAddress(192, 168, 1, 80);
-    httpHandler.setClientId("18d1ff4f-91d1-4f95-988a-b278480a53ea");
+    httpHandler.setClientUUID("18d1ff4f-91d1-4f95-988a-b278480a53ea");
     httpHandler.setServerAddress("192.168.1.200");
     httpHandler.setServerPort(80);
     httpHandler.init();

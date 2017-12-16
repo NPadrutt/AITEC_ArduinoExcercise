@@ -21,12 +21,12 @@ setMACAddress()
 */
 void HttpHandler::setClientMACAddress(byte firstByte, byte secondByte, byte thirdByte, byte fourthByte, byte fifthByte, byte sixthByte)
 {
-    arduinoMACAddr[0] = firstByte;
-    arduinoMACAddr[1] = secondByte;
-    arduinoMACAddr[2] = thirdByte;
-    arduinoMACAddr[3] = fourthByte;
-    arduinoMACAddr[4] = fifthByte;
-    arduinoMACAddr[5] = sixthByte;
+    _arduinoMACAddr[0] = firstByte;
+    _arduinoMACAddr[1] = secondByte;
+    _arduinoMACAddr[2] = thirdByte;
+    _arduinoMACAddr[3] = fourthByte;
+    _arduinoMACAddr[4] = fifthByte;
+    _arduinoMACAddr[5] = sixthByte;
 }
 
 
@@ -37,10 +37,10 @@ setIpAddress()
 */
 void HttpHandler::setClientIpAddress(byte firstByte, byte secondByte, byte thirdByte, byte fourthByte)
 {
-    arduinoIpAddr[0] = firstByte;
-    arduinoIpAddr[1] = secondByte;
-    arduinoIpAddr[2] = thirdByte;
-    arduinoIpAddr[3] = fourthByte;
+    _arduinoIpAddr[0] = firstByte;
+    _arduinoIpAddr[1] = secondByte;
+    _arduinoIpAddr[2] = thirdByte;
+    _arduinoIpAddr[3] = fourthByte;
 }
 
 
@@ -49,9 +49,9 @@ void HttpHandler::setClientIpAddress(byte firstByte, byte secondByte, byte third
 setClientId()
 ================
 */
-void HttpHandler::setClientId(char newClientId[])
+void HttpHandler::setClientUUID(char* newClientUUDI)
 {
-    sprintf(clientID, "%s", newClientId);
+    _clientUUID = newClientUUDI;
 }
 
 
@@ -62,7 +62,7 @@ setServerAddress()
 */
 void HttpHandler::setServerAddress(char* newServerAddress)
 {
-    serverAddress = newServerAddress;
+    _serverAddress = newServerAddress;
 }
 
 
@@ -73,7 +73,7 @@ setServerPort()
 */
 void HttpHandler::setServerPort(int newServerPortNr)
 {
-    serverPortNr = newServerPortNr;
+    _serverPortNr = newServerPortNr;
 }
 
 
@@ -84,7 +84,7 @@ init()
 */
 void HttpHandler::init()
 {
-    Ethernet.begin(arduinoMACAddr, arduinoIpAddr);
+    Ethernet.begin(_arduinoMACAddr, _arduinoIpAddr);
 }
 
 
@@ -100,12 +100,12 @@ void HttpHandler::postImageToServer(int currImageNumber)
     File myFile;
 
     // Adjust "IMAGE000.JPG" to current image number
-    fileName[5] = currImageNumber / 100 + '0';
-    fileName[6] = currImageNumber / 10 + '0';
-    fileName[7] = currImageNumber % 10 + '0';
+    _fileName[5] = currImageNumber / 100 + '0';
+    _fileName[6] = currImageNumber / 10 + '0';
+    _fileName[7] = currImageNumber % 10 + '0';
     
-    if (SD.exists(fileName)) {
-        myFile = SD.open(fileName);
+    if (SD.exists(_fileName)) {
+        myFile = SD.open(_fileName);
 
         if (myFile) {
             unsigned long contentLength = 0;
@@ -114,14 +114,14 @@ void HttpHandler::postImageToServer(int currImageNumber)
             fileSize = myFile.size();
             contentLength = (fileSize + 2 - ((fileSize + 2) % 3)) / 3 * 4; // size of the file as Base64
 
-            if (client.connect(serverAddress, serverPortNr)) {
+            if (client.connect(_serverAddress, _serverPortNr)) {
                 char buffer[50];
 
                 // Variable content
-                sprintf(buffer, "{\"clientID\":\"%s\"\0", clientID);
+                sprintf(buffer, "{\"clientID\":\"%s\"\0", _clientUUID);
 
                 // Make a HTTP request:
-                client.println(F("POST /iot/test.php HTTP/1.1"));
+                client.println(F("POST /iot/php/ajax.php?action=addNewEntry HTTP/1.1"));
                 client.println(F("User-Agent: Arduino"));
                 client.println(F("Host: 192.168.1.200"));
                 client.println(F("Content-Type: application/json"));
@@ -161,7 +161,6 @@ void HttpHandler::postImageToServer(int currImageNumber)
                     }
                 }
 
-                //final <48 byte cleanup packet
                 if (clientCount > 0) {
                     base64_encode(clientBase64Buf, clientBuf, clientCount);
                     //Serial.print(clientBase64Buf); // For serial output to check if encoding was successful

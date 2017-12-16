@@ -1,5 +1,5 @@
-#ifndef GENERAL_H
-#define GENERAL_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
     //#define DEBUG
 
@@ -9,4 +9,4 @@
         #define DEBUG_PRINT(x)
     #endif
 
-#endif // GENERAL_H
+#endif // GLOBALS_H
