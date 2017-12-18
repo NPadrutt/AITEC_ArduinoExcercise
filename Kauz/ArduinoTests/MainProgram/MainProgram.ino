@@ -14,6 +14,13 @@
 #include "Include\SeeedOLED.h"
 #include "Include\Globals.h"
 
+const int MESSAGE_MAX_LENGTH = 50;
+const int WAIT_FOR_REPLY_IN_SECONDS = 60;
+
+int secondCounter = 0;
+
+char message[MESSAGE_MAX_LENGTH];  // 50 chars and one string-terminator
+
 ButtonHandler button = ButtonHandler();
 CameraHandler camera = CameraHandler();
 HttpHandler httpHandler = HttpHandler();
@@ -63,7 +70,6 @@ void setup()
     SeeedOled.setNormalDisplay();           // Set display to normal mode (i.e non-inverse mode)
     SeeedOled.setPageMode();                // Set addressing mode to Page Mode
     SeeedOled.setTextXY(0, 0);              // Set the cursor to Xth Page, Yth Column  
-    SeeedOled.putString("Hello World!");    // Print the String
 
     DEBUG_PRINT("... setup done!");
 }
@@ -76,15 +82,28 @@ loop()
 */
 void loop()
 {
-    Serial.println(F("\nReady!"));
+    DEBUG_PRINT("\nReady for new Event!");
+    SeeedOled.clearDisplay();
+    SeeedOled.putString("Ready! :-)");    // Print the String
 
     button.waitForButtonPress();
     camera.captureImage();
     camera.saveImageToSDCard();
     delay(50);
     httpHandler.postImageToServer(camera.getCurrentImageNr());
+    
+    while (secondCounter <= WAIT_FOR_REPLY_IN_SECONDS) {
+        if (httpHandler.getReplyFromServer(message, MESSAGE_MAX_LENGTH)) {
+            SeeedOled.clearDisplay();
+            SeeedOled.putString(message);
+            break;
+        }
+        else {
+            Serial.println("Wait...");
+            delay(1000);
+            secondCounter++;
+        }
+    }
 
-    /*if (waitForUserReply()) {
-        displayMessage();
-    }*/
+    button.waitForButtonPress();
 }

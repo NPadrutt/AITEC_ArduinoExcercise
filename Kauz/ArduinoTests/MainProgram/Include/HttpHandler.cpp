@@ -114,7 +114,9 @@ void HttpHandler::postImageToServer(int currImageNumber)
             fileSize = myFile.size();
             contentLength = (fileSize + 2 - ((fileSize + 2) % 3)) / 3 * 4; // size of the file as Base64
 
+            DEBUG_PRINT("   - connecting...");
             if (client.connect(_serverAddress, _serverPortNr)) {
+                DEBUG_PRINT("   - ...connected!");
                 char buffer[50];
 
                 // Variable content
@@ -143,7 +145,7 @@ void HttpHandler::postImageToServer(int currImageNumber)
 
                 // Here begins the magic about converting the image to base64 and sending it via Ethernet
                 int clientCount = 0;
-                char clientBuf[FILE_BUFFER_SIZE]; // Must be a multiple of 3
+                char clientBuf[FILE_BUFFER_SIZE];
                 char clientBase64Buf[FILE_BASE64_BUFFER_SIZE];
 
                 DEBUG_PRINT("   - Uploading... ");
@@ -175,6 +177,7 @@ void HttpHandler::postImageToServer(int currImageNumber)
                 client.println("\"}"); // (2)
                 // End printing content
 
+                client.flush();
                 client.stop();
             }
             else {
@@ -190,4 +193,92 @@ void HttpHandler::postImageToServer(int currImageNumber)
     }
 
     DEBUG_PRINT(" - Leave [HttpHandler::postImageToServer()]");
+}
+
+
+/*
+================
+getReplyFromServer()
+================
+*/
+bool HttpHandler::getReplyFromServer(char* buffer, int bufferLength)
+{
+    DEBUG_PRINT(" - Enter [HttpHandler::getReplyFromServer()]");
+
+    DEBUG_PRINT("   - connecting...");
+    if (client.connect(_serverAddress, _serverPortNr)) {
+        DEBUG_PRINT("   - ...connected!");
+        client.println(F("GET /iot/php/ajax.php?action=getReply&UUID=18d1ff4f-91d1-4f95-988a-b278480a53ea HTTP/1.0"));
+        client.println(F("Host: 192.168.1.200"));
+        client.println(F("Connection: close"));
+        client.println();
+        delay(100);
+
+        char* messageBodyStart = "\r\n\r\n";
+        int messageCharCounter = 0;
+        bool charIsBodyContent = false;
+
+        buffer[4] = '\0';
+
+        while (client.available()) {
+            char c = client.read();
+
+            if (charIsBodyContent) {
+                buffer[messageCharCounter++] = c;
+
+                if (messageCharCounter == bufferLength - 1) {
+                    // Buffer is full, stop reading new chars
+                    break;
+                }
+            }
+            else {
+                buffer[3] = c;
+
+                if (_matchString(buffer, messageBodyStart, 4)) {
+                    DEBUG_PRINT("   - Found start of body message!");
+                    charIsBodyContent = true;
+                }
+
+                // Move chars one position to the left
+                int x = 1;
+                for (x; x < 4; x++) {
+                    buffer[x - 1] = buffer[x];
+                };
+            }
+        }
+
+        buffer[messageCharCounter] = '\0';
+
+        client.flush();
+        client.stop();
+
+        // If answer is 0 then there is no answer from the user
+        DEBUG_PRINT(" - Leave [HttpHandler::getReplyFromServer()]");
+        return (buffer[0] == '0') ? false : true;
+    }
+    else {
+        DEBUG_PRINT("   - Unable to connect to the server!");
+    }
+    
+    DEBUG_PRINT(" - Leave [HttpHandler::getReplyFromServer()]");
+    return false;
+}
+
+
+/*
+================
+_matchString()
+================
+*/
+bool HttpHandler::_matchString(char* newInputString, char* newMatchString, int newMatchStringlength)
+{
+    int x = 0;
+
+    for (x; x < newMatchStringlength; x++) {
+        if (newInputString[x] != newMatchString[x]) {
+            return false;
+        }
+    }
+
+    return true;
 }
