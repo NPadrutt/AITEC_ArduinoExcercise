@@ -47,8 +47,32 @@ void ButtonHandler::waitForButtonPress()
         if (digitalRead(_pinNumber) == HIGH) {
             delay(20);  // Debouncing -> Wait 20ms and check if button is still pressed
             if (digitalRead(_pinNumber) == HIGH) {
-                DEBUG_PRINT("   - Button pressed!");
+                DEBUG_PRINT("   - Button press!");
                 DEBUG_PRINT(" - Leave [waitForButtonPress()]");
+                return;
+            }
+        }
+    }
+}
+
+
+/*
+================
+waitForButtonPressed()
+================
+*/
+void ButtonHandler::waitForButtonPressed()
+{
+    DEBUG_PRINT(" - Enter [waitForButtonPressed()]");
+
+    while (true) {
+        if (digitalRead(_pinNumber) == HIGH) {
+            delay(20);  // Debouncing -> Wait 20ms and check if button is still pressed
+            if (digitalRead(_pinNumber) == HIGH) {
+                while (digitalRead(_pinNumber) == HIGH);
+
+                DEBUG_PRINT("   - Button pressed!");
+                DEBUG_PRINT(" - Leave [waitForButtonPressed()]");
                 return;
             }
         }

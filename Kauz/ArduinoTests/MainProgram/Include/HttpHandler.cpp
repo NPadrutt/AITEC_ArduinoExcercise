@@ -120,7 +120,7 @@ void HttpHandler::postImageToServer(int currImageNumber)
                 char buffer[50];
 
                 // Variable content
-                sprintf(buffer, "{\"clientID\":\"%s\"\0", _clientUUID);
+                sprintf(buffer, "{\"device_uuid\":\"%s\"\0", _clientUUID);
 
                 // Make a HTTP request:
                 client.println(F("POST /iot/php/ajax.php?action=addNewEntry HTTP/1.1"));

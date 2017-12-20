@@ -1,0 +1,142 @@
+/* Fonts */
+@font-face {
+    font-family: Roboto-Regular;
+    src: url('../font/Roboto-Regular.woff2');
+}
+
+*{
+    margin:0;
+    padding:0;
+}
+
+body{
+    color:#eee;
+    background-image: url("../img/tile.png"), url("../img/background.jpg");
+    background-attachment: fixed, fixed;
+    background-size: auto, cover;
+    background-repeat: repeat, no-repeat;
+    border-top:5px solid #212121;
+    font-family: Roboto-Regular, Helvetica, sans-serif;
+}
+
+#Container{
+    margin: 50px auto auto auto;
+    padding: 0px 0px 10px 0px;
+    max-width: 800px;
+    border: 1px solid black;
+    background:url('../img/noise.png') repeat rgba(25, 25, 25, 1);
+    top: 50%;
+    left: 50%;
+    box-shadow: 0px 0px 10px 1px #000000;
+}
+
+#Title{
+    padding-bottom: 10px;
+    font-size: 30px;
+    color: rgb(200, 200, 200);
+    text-shadow: -1px -1px rgb(0, 0, 0);
+    height: 30px;
+    text-align: center;
+    line-height: 40px;
+    border-bottom: 1px solid rgb(20, 20, 20);
+    text-transform: uppercase;
+    background: rgba(10, 10, 10, 0.3);
+}
+
+.TopEventElement {
+    border: 2px solid rgb(200,50,50);
+    display: flex;
+    flex-direction: column;
+    background:url('../img/noise.png') repeat rgba(40,40,40,0.7);
+    margin: 10px 10px 0px 10px;
+    padding: 0px 0px 10px 0px;
+}
+
+.EventElement {
+    border: 1px solid rgb(50,50,50);
+    display: flex;
+    flex-direction: column;
+    background:url('../img/noise.png') repeat rgba(20,20,20,0.7);
+    margin: 10px 10px 0px 10px;
+    padding: 0px 0px 10px 0px;
+}
+
+.ElementHeader {
+    min-width: 760px;
+    background: rgba(0,0,0,0.7);
+    color: rgb(255, 190, 67);
+    padding: 5px 0px 5px 10px;
+    margin: 0px 0px 5px 0px;
+}
+
+.ElementBody{
+    display: flex;
+    flex-direction: row;
+}
+
+.ElementInfo {
+    min-width: 50%;
+}
+
+.TextTitle {
+    float:left;
+    width: 50px;
+    color: rgb(255,255,255);
+    margin: 0px 10px 0px 10px;
+    text-shadow: 1px 1px 1px rgb(0,0,0);
+}
+
+.TextInfo {
+    color: rgb(150,150,150);
+    text-shadow: 1px 1px 1px rgb(0,0,0);
+}
+
+.TextArea {
+    float:left;
+    margin-top: 5px;
+}
+
+.ElementImage {
+    width: 50%;
+
+}
+
+.Image {
+    /*margin: 0px 0px 0px 10px;*/
+    box-shadow: 0px 0px 5px 2px rgb(0,0,0);
+    display: block;
+    margin: auto;
+}
+
+.ReplyButton{
+    margin-top: 5px;
+    margin-left: 10px;
+    float:left;
+    outline: none;
+    width: 100px;
+    height: 30px;
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,.8);
+    color: rgb(255,255,255);
+    border: solid 1px #da7c0c;
+    background: #f78d1d;
+    background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+    background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+    transition: color 0.5s ease-out;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 1.0);
+    font-size: 15px;
+    font-family: Roboto-Regular, Helvetica, sans-serif;
+}
+
+.ReplyButton:hover{
+    background: #f47c20;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+    background: -moz-linear-gradient(top,  #f88e11,  #f06015);
+}
+
+.ReplyButton:active{
+    color: #be9975;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a));
+    background: -moz-linear-gradient(top,  #f47a20,  #faa51a);
+}

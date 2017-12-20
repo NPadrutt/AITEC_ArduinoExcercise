@@ -69,8 +69,7 @@ void setup()
     SeeedOled.clearDisplay();               // Clear the screen and set start position to top left corner
     SeeedOled.setNormalDisplay();           // Set display to normal mode (i.e non-inverse mode)
     SeeedOled.setPageMode();                // Set addressing mode to Page Mode
-    SeeedOled.setTextXY(0, 0);              // Set the cursor to Xth Page, Yth Column  
-
+    SeeedOled.setTextXY(0, 0);              // Set the cursor to Xth Page, Yth Column
     DEBUG_PRINT("... setup done!");
 }
 
@@ -84,13 +83,16 @@ void loop()
 {
     DEBUG_PRINT("\nReady for new Event!");
     SeeedOled.clearDisplay();
-    SeeedOled.putString("Ready! :-)");    // Print the String
+    SeeedOled.putString("Ready!");
 
     button.waitForButtonPress();
     camera.captureImage();
     camera.saveImageToSDCard();
     delay(50);
     httpHandler.postImageToServer(camera.getCurrentImageNr());
+    
+    SeeedOled.clearDisplay();
+    SeeedOled.putString("Wait for reply..");
     
     while (secondCounter <= WAIT_FOR_REPLY_IN_SECONDS) {
         if (httpHandler.getReplyFromServer(message, MESSAGE_MAX_LENGTH)) {
@@ -99,11 +101,10 @@ void loop()
             break;
         }
         else {
-            Serial.println("Wait...");
             delay(1000);
             secondCounter++;
         }
     }
 
-    button.waitForButtonPress();
+    button.waitForButtonPressed();
 }

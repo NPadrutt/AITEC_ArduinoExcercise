@@ -11,6 +11,7 @@ class ButtonHandler
         ButtonHandler(int);
         void setInputPin(int);
         void waitForButtonPress();
+        void waitForButtonPressed();
         bool isPressed();
 };
 
